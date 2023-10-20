@@ -13,6 +13,8 @@ import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @CrossOrigin(origins = "*",maxAge = 3600)
@@ -23,7 +25,10 @@ public class ParkingSpotController {
     ParkingSpotService service;
 
     @PostMapping
-    public ResponseEntity<Object> saveParkingSpot(@RequestBody @Valid ParkingSpotDto parkingSpotDto){
+    public ResponseEntity<Object> saveParkingSpot(
+            @RequestBody
+            @Valid ParkingSpotDto parkingSpotDto
+    ){
         if(service.existsByLicensePlateCar(parkingSpotDto.getLicensePlateCar())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Conflict: License Car is already in use!");
         }
@@ -39,5 +44,21 @@ public class ParkingSpotController {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.save(entity));
 
     }
+
+    @GetMapping
+    public ResponseEntity<List<ParkingSpotEntity>> getAllParkingSpot(){
+        return ResponseEntity.status(HttpStatus.OK).body(service.getAllParkingSpot());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> getOneParkingSpot(
+            @PathVariable (value = "id") UUID id){
+        Optional<ParkingSpotEntity> parkingSpotEntityOptional = service.findById(id);
+        if(!parkingSpotEntityOptional.isPresent()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Parking spot not found.");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(parkingSpotEntityOptional.get());
+    }
+
 }
 
