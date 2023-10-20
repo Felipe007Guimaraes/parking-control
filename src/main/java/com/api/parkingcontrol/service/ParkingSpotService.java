@@ -6,6 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
 @Service
 public class ParkingSpotService {
 
@@ -15,6 +19,14 @@ public class ParkingSpotService {
     @Transactional
     public ParkingSpotEntity save(ParkingSpotEntity parkingSpotEntity){
         return repository.save(parkingSpotEntity);
+    }
+
+    public List<ParkingSpotEntity> getAllParkingSpot(){
+        return repository.findAll();
+    }
+
+    public Optional<ParkingSpotEntity> findById(UUID id){
+        return repository.findById(id);
     }
 
     public boolean existsByLicensePlateCar(String licensePlateCar){
