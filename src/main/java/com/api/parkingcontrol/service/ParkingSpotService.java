@@ -3,6 +3,8 @@ package com.api.parkingcontrol.service;
 import com.api.parkingcontrol.entities.ParkingSpotEntity;
 import com.api.parkingcontrol.repositories.ParkingSpotRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,8 +23,13 @@ public class ParkingSpotService {
         return repository.save(parkingSpotEntity);
     }
 
-    public List<ParkingSpotEntity> getAllParkingSpot(){
-        return repository.findAll();
+    @Transactional
+    public void delete(ParkingSpotEntity parkingSpotEntity){
+        repository.delete(parkingSpotEntity);
+    }
+
+    public Page<ParkingSpotEntity> getAllParkingSpot(Pageable pageable){
+        return repository.findAll(pageable);
     }
 
     public Optional<ParkingSpotEntity> findById(UUID id){
@@ -40,4 +47,6 @@ public class ParkingSpotService {
     public boolean existsByParkingSpotNumber(String parkingSpotNumber){
         return repository.existsByParkingSpotNumber(parkingSpotNumber);
     }
+
+
 }
